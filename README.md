@@ -4,6 +4,16 @@
 
 The script doesn't convert anything. It pulls the firmware image straight out of the vendor's Windows updater `.exe` and sends it over USB HID using the same IAP protocol. The protocol was worked out by disassembling that updater. No firmware is included in this repository. You need the vendor `.exe`.
 
+## The story
+
+I'd been happily using my SPM ARA 87 until the Fn key started acting stuck. The keyboard behaved as if Fn were held down even when I wasn't touching it. SPM had released new firmware with a fix, but the only update tools were Windows `.exe` files, and I'm on a Mac.
+
+Rather than borrow a Windows machine, I decided to write my own updater. I opened up the vendor's dongle updater and found the firmware image stored inside the `.exe`. Then I disassembled the tool to work out its USB HID protocol: the 64-byte frames, the header, block and finish commands, and the CRC16 checks. I rebuilt all of it in Python, and the result is `ara87_dongle_update.py`.
+
+Then came the plot twist. The keyboard itself never needed any of this. Turn the power switch off, hold **ESC** while plugging in the cable, and it shows up as a USB drive. Drag the `.bin` onto it and you're done. The Fn bug went away with a simple drag and drop. 🙃
+
+The dongle still has no official way to update from a Mac, so the tool stays here in case it helps someone. A note on how far it's been tested: it reads the firmware correctly, builds every frame, and finds the dongle. My dongle was already on the latest firmware (V0101), though, so a full flash hasn't been run on real hardware yet.
+
 ## Requirements
 
 ```sh
