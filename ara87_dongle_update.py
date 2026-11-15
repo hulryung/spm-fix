@@ -26,6 +26,11 @@ import struct
 import sys
 import time
 
+try:
+    import hid  # pip install hid (needs libhidapi: brew install hidapi)
+except ImportError:
+    hid = None
+
 MAGIC = 0x5F2C6AAC
 FRAME = 64
 CHUNK = 56
@@ -111,9 +116,11 @@ class Link:
         for f in frames(msg, self.rid):
             if self.dry:
                 continue
-            if self.dev.write(f) < 0:
-                raise IOError(f"{label}: hid write failed")
-            r = bytes(self.dev.read(FRAME, self.to))
+            try:
+                self.dev.write(f)
+                r = bytes(self.dev.read(FRAME, self.to))
+            except hid.HIDException as e:
+                raise IOError(f"{label}: {e}")
             if not r:
                 raise IOError(f"{label}: no reply within {self.to} ms")
             last = r
@@ -168,13 +175,13 @@ def main():
     dev = None
     rid = cfg["devs"][0][2]
     if not a.dry_run:
-        import hid
+        if hid is None:
+            sys.exit("python 'hid' module not available: brew install hidapi && pip install hid")
         d, rid = find_device(hid, cfg["devs"], cfg["search_timeout"] / 1000)
         print(f"found : {d['product_string']} fw bcdDevice=0x{d['release_number']:04X}")
         if not a.yes and input("Flash dongle now? Keep it plugged in until done. [y/N] ").lower() != "y":
             sys.exit("aborted")
-        dev = hid.device()
-        dev.open_path(d["path"])
+        dev = hid.Device(path=d["path"])
 
     link = Link(dev, rid, cfg["ack_timeout"], a.dry_run)
     bs = info["block"]
