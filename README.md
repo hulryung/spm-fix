@@ -31,6 +31,14 @@ The keyboard itself needs no tool:
 2. Hold **ESC** while you plug in the USB cable. A USB drive appears.
 3. Drag and drop the `.bin` file onto it.
 
+### 키보드 펌웨어 업데이트 (한국어)
+
+키보드 본체는 별도 프로그램 없이 Mac에서도 업데이트할 수 있습니다.
+
+1. 키보드 뒷면의 전원 스위치를 **OFF**로 둡니다.
+2. **ESC** 키를 누른 채로 USB 케이블을 컴퓨터에 연결합니다. 그러면 USB 저장소 장치가 나타납니다.
+3. 펌웨어 파일(예: `(유선)ARA 87_V0106_260811.bin`)을 그 저장소에 드래그 앤 드롭합니다.
+
 ## Protocol summary
 
 | Layer | Format |
