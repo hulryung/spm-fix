@@ -23,6 +23,27 @@ DYLD_LIBRARY_PATH=/opt/homebrew/lib venv/bin/python ara87_dongle_update.py --exe
 
 The dongle's current firmware version is the USB `bcdDevice` value (for example `0x0101` = V0101). The script prints it before flashing.
 
+### 동글 펌웨어 업데이트 (한국어)
+
+SPM은 2.4G 동글 펌웨어를 Windows용 `.exe`로만 배포합니다. 이 스크립트는 그 `.exe` 안에 들어 있는 펌웨어를 바로 꺼내서 USB로 동글에 씁니다. 파일을 따로 변환할 필요가 없습니다.
+
+1. 준비 (처음 한 번만):
+   ```sh
+   brew install hidapi
+   python3 -m venv venv && venv/bin/pip install hid
+   ```
+2. SPM 홈페이지에서 받은 동글 업데이터 `.exe`가 정상인지 확인합니다. 이 단계에서는 장치에 아무것도 쓰지 않습니다.
+   ```sh
+   venv/bin/python ara87_dongle_update.py --exe "(동글)ARA 87_2.4G_V0101_260331.exe" --dry-run
+   ```
+3. 동글을 Mac에 꽂고 업데이트를 실행합니다.
+   ```sh
+   DYLD_LIBRARY_PATH=/opt/homebrew/lib venv/bin/python ara87_dongle_update.py --exe "(동글)ARA 87_2.4G_V0101_260331.exe"
+   ```
+   - 실행하면 현재 동글의 펌웨어 버전(`bcdDevice`, 예: `0x0101` = V0101)이 표시됩니다. 받은 파일과 버전이 같으면 업데이트할 필요가 없습니다.
+   - `y`를 입력하면 업데이트가 시작됩니다. `done`이 나올 때까지 동글을 뽑지 마세요.
+   - 업데이트가 끝나면 동글이 자동으로 재부팅됩니다.
+
 ## Keyboard (wired) firmware
 
 The keyboard itself needs no tool:
